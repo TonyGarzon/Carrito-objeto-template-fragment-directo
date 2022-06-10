@@ -3,7 +3,7 @@ const template = document.getElementById("template");
 const fragment = document.createDocumentFragment();
 const btnesBotones = document.querySelectorAll(".card .btn-outline-primary");
 
-const carritoObjeto = {};
+const carritoObjeto = [];
 
 const agregarAlcarrito = (e) => {
      console.log(e.target.dataset.fruta);
@@ -13,24 +13,26 @@ const agregarAlcarrito = (e) => {
          id: e.target.dataset.fruta,
          cantidad: 1,
      };
-     
-     if (carritoObjeto.hasOwnProperty(producto.titulo)) {
-         producto.cantidad = carritoObjeto[producto.titulo].cantidad + 1;
+
+     const index = carritoObjeto.findIndex((item) => item.id === producto.id);
+
+     console.log(index);
+
+     if(index === -1) {
+        carritoObjeto.push(producto);
+     } else {
+        carritoObjeto[index].cantidad++;
      }
 
-     carritoObjeto[producto.titulo] = producto;
+     console.log(carritoObjeto);
 
-     pintarCarrito();
-
-    //  console.log(carritoObjeto);
-
+     pintarCarrito(carritoObjeto);
 };
 
-const pintarCarrito = (producto) => {
-
+const pintarCarrito = (array) => {
     carrito.textContent = ""
 
-    Object.values(carritoObjeto).forEach(item => {
+    array.forEach((item) => {
         const clone = template.content.firstElementChild.cloneNode(true);
         clone.querySelector(".lead").textContent = item.titulo;
         clone.querySelector(".rounded-pill").textContent = item.cantidad;
@@ -39,8 +41,6 @@ const pintarCarrito = (producto) => {
     })
 
     carrito.appendChild(fragment);
-    
 }
 
 btnesBotones.forEach((btn) => btn.addEventListener("click", agregarAlcarrito));
-
