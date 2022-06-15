@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 </head>
 
@@ -21,8 +21,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Frutilla 🍓</h5>
-                        <button class="tbn btn-primary btn-outline-primary"
-                        data-fruta="Frutilla">Agragar</button>
+                        <p class="lead">$300</p>
+                        <button class="tbn btn-outline-primary"
+                        data-fruta="Frutilla" data-precio="300">Agragar</button>
                     </div>
                 </div>
             </article>
@@ -31,8 +32,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Banana 🍌</h5>
-                        <button class="tbn btn-primary btn-outline-primary"
-                        data-fruta="Banana">Agragar</button>
+                        <p class="lead">$100</p>
+                        <button class="tbn btn-outline-primary"
+                        data-fruta="Banana" data-precio="100">Agragar</button>
 
                     </div>
                 </div>
@@ -42,8 +44,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Manzana 🍏</h5>
-                        <button class="tbn btn-primary btn-outline-primary"
-                        data-fruta="Manzana">Agragar</button>
+                        <p class="lead">$200</p>
+                        <button class="tbn btn-outline-primary"
+                        data-fruta="Manzana" data-precio="200">Agragar</button>
 
                     </div>
                 </div>
@@ -57,11 +60,34 @@
         <ul class="list-group" id="carrito"></ul>
     </section>
 
-    <template id="template">
+    <footer id="footer" class="container mt-3">
+        <template id="templateFooter">
+            <div class="card">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <p class="lead mb-0">Total $<span>1500</span></p>
+                    <button class="btn btn-outline-info">Finalizar compra</button>
+                </div>
+            </div>
+        </template>        
+    </footer>
+
+    <template id="template">        
+        <li class="list-group-item bg-secondary text-white">
+            <span class="badge bg-primary rounded-pill align-middle">12</span>
+            <span class="lead align-middle">Frutilla</span>
+        </li>
+
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span class="lead">Frutilla</span>
-            <span class="badge bg-primary rounded-pill">12</span>
-        </li>        
+
+            <div>
+                <p class="lead mb-0">Total: $<span>300</span></p>
+            </div>
+
+            <div>
+                <button class="btn btn-sm btn-danger">Quitar</button>
+                <button class="btn btn-sm btn-success">Agregar</button>
+            </div>
+        </li>       
     </template>
 
     
