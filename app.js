@@ -1,125 +1,81 @@
-const carrito = document.getElementById("carrito");
-const template = document.getElementById("template");
-const footer = document.getElementById("footer");
-const templateFooter = document.getElementById("templateFooter");
-const fragment = document.createDocumentFragment();
-const btnesBotones = document.querySelectorAll(".card .btn-outline-primary");
+// const formularioQuerySelector = document.querySelector("#form");
+// const userName = document.getElementById("userName");
+// const userEmail = document.getElementById("userEmail");
 
-document.addEventListener("click", e => {
+const formulario = document.getElementById("formulario");
+const userName = document.querySelector("input[name='userName']");
+const userEmail = document.querySelector("input[name='userEmail']");
 
-    // console.log(e.target.matches(".card .btn-outline-primary"));
-    if (e.target.matches(".card .btn-outline-primary")) {
-        // console.log("ejecutar agregar al carro");
-        agregarAlcarrito(e)
-    };
+const alertSuccess = document.getElementById("alertSuccess");
+const alertEmail = document.getElementById("alertEmail");
+const alertName = document.getElementById("alertName");
 
-    // console.log(e.target.matches(".list-group-item .btn-success"));
-    if(e.target.matches("#carrito .list-group-item .btn-success")){
-        btnAumentar(e)
+const regUserName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
+const regUserEmail = /^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/;
+
+const pintarMensajeExito = () => {
+    alertSuccess.classList.remove("d-none");
+    alertSuccess.textContent = "Mensaje enviado con éxito";
+};
+
+const pintarMensajeError = (errores) => {    
+    errores.forEach(item => {
+        item.tipo.classList.remove("d-none");
+        item.tipo.textContent = item.msg;
+    });
+};
+
+formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
+    alertSuccess.classList.add("d-none");
+
+    const errores = [];
+
+    // esto devuelve "true" si existe solo espacios
+    // console.log(!userName.value.trim());
+
+    if (!regUserName.test(userName.value) || !userName.value.trim()) {
+        userName.classList.add("is-invalid");
+        errores.push({
+            tipo: alertName,
+            msg: "Formato no válido en el campo nombre, solo letras"
+        })
+    }else{
+        userName.classList.remove("is-invalid");
+        userName.classList.add("is-valid");
+        alertName.classList.add("d-none")
     }
 
-    if(e.target.matches("#carrito .list-group-item .btn-danger")){
-        btnDisminur(e)
+    if (!regUserEmail.test(userEmail.value) || !userEmail.value.trim() ) {
+        userEmail.classList.add("is-invalid");
+        errores.push({
+            tipo: alertEmail,
+            msg: "Escriba un correo válido",
+        });
+    }else{
+        userEmail.classList.remove("is-invalid");
+        userEmail.classList.add("is-valid");
+        alertEmail.classList.add("d-none")
+        
     }
-    
+
+    if(errores.length !== 0){
+        pintarMensajeError(errores)
+        return
+    }
+
+    console.log("Formulario enviado");
+    pintarMensajeExito()
 });
 
-let carritoObjeto = [];
 
-const agregarAlcarrito = (e) => {
-    //  console.log(e.target.dataset.fruta);
 
-     const producto = {
-         titulo: e.target.dataset.fruta,
-         id: e.target.dataset.fruta,
-         cantidad: 1,
-         precio: parseInt(e.target.dataset.precio),
-     };
-
-    //  console.log(producto);
-
-     const index = carritoObjeto.findIndex((item) => item.id === producto.id);
-
-    //  console.log(index);
-
-     if(index === -1) {
-        carritoObjeto.push(producto);
-     } else {
-        carritoObjeto[index].cantidad++;
-        // carritoObjeto[index].precio = carritoObjeto[index].cantidad * producto.precio;
-     }
-
-     console.log(carritoObjeto);
-
-     pintarCarrito();
-};
-
-const pintarCarrito = () => {
-    carrito.textContent = ""
-
-    carritoObjeto.forEach((item) => {
-        const clone = template.content.cloneNode(true);
-        clone.querySelector(".text-white .lead").textContent = item.titulo;
-        clone.querySelector(".rounded-pill").textContent = item.cantidad;
-        clone.querySelector("div .lead span").textContent = item.precio * item.cantidad;
-
-        clone.querySelector(".btn-danger").dataset.id = item.id;
-        clone.querySelector(".btn-success").dataset.id = item.id;
-
-        fragment.appendChild(clone);
-    })
-
-    carrito.appendChild(fragment);
-
-    pintarFooter();
-
-};
-
-const pintarFooter = () => {
-    console.log("pintar footer");
-    footer.textContent = "";
-
-    const total = carritoObjeto.reduce(
-        (acc, current) => acc + current.cantidad * current.precio, 0
-    );
-
-    const clone = templateFooter.content.cloneNode(true);
-    clone.querySelector("span").textContent = total;
-
-    footer.appendChild(clone);
-
-};
-
-const btnAumentar = (e) => {
-    console.log("me diste click ", e.target.dataset.id);
-    carritoObjeto = carritoObjeto.map(item  => {
-        if(item.id === e.target.dataset.id){
-            item.cantidad ++;
-        };
-        return item;
-    });
-
-    pintarCarrito();
-
-};
-
-const btnDisminur = (e) => {
-    console.log("me diste click ", e.target.dataset.id)
-
-    carritoObjeto = carritoObjeto.filter(item => {
-        if(item.id === e.target.dataset.id){
-            if(item.cantidad > 0){
-                item.cantidad--
-                if(item.cantidad === 0) return;
-                return item;
-            }
-        } else {
-            return item;
-        } 
-    });
-
-    console.log(carritoObjeto);
-
-    pintarCarrito();
-
-};
+// <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+// integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+// crossorigin="anonymous"></script>
+// <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+// integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+// crossorigin="anonymous"></script>
+// <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+// integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+// crossorigin="anonymous"></script>
