@@ -12,57 +12,18 @@
     crossorigin="anonymous">
 </head>
 
-<body>
+    <body>
 
-    <div class="container">
+        <div class="container">
 
-        <h1>Formularios</h1>
+            <h1>Promesas</h1>
 
-        <form id="formulario" novalidate>
-            <input
-                class="form-control mb-2"
-                type="text"
-                name="userName"
-                placeholder="Ingrese nombre"
-                autocomplete="off"
-                id="userName"
-                required
-                minlength="3"
-                maxlength="10"
-                pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$"
-                title="Solo letras en el nombre"
-                value="Tony"
-            />
+        
 
-            <p class="text-danger m-2 d-none" id="alertName"></p>
-
-            <input
-                class="form-control mb-2"
-                type="email"
-                placeholder="Ingrese correo"
-                name="userEmail"
-                id="userEmail"
-                autocomplete="off"
-                required
-                pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$"
-                title="Ingresa un correo válido"
-                value="tontony@correo.com"
-            />
-
-            <p class="text-danger m-2 d-none" id="alertEmail"></p>
-
-            
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-
-        <div class="alert alert-success my-2 d-none" id="alertSuccess">
-            Mesaje enviado con éxito
         </div>
 
-    </div>
 
-
-    <script src="app.js"></script>    
-</body>
+        <script src="app.js"></script>    
+    </body>
 
 </html>
