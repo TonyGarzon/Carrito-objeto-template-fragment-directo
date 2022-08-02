@@ -10,18 +10,42 @@
     rel="stylesheet"
     integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
     crossorigin="anonymous">
+
+    <title></title>
+
 </head>
 
     <body>
-
-        <div class="container">
-
-            <h1>Promesas</h1>
-
         
+        <div class="container my-5">
 
+            <!-- Spinner Loading -->
+            <section class="d-flex align-items-center d-none" id="loading">
+                <strong>Loading...</strong>
+                <div
+                    class="spinner-border ms-auto"
+                    role="status"
+                    aria-hidden="true"
+                ></div>
+            </section>
+
+            <section class="row" id="card-dinamicas">                                
+            </section>
         </div>
 
+        <template id="template-card">
+            <article class="col-12 col-md-6 col-lg-3 mb-3">
+                <div class="card text-center shadow">
+                    <img src="https://rickandmortyapi.com/api/character/avatar/7.jpeg" alt="" class="card-img-top">
+                    <div class="card body">
+                        <h5 class="card-title text-primary lead">
+                            Abradolf Lincler
+                        </h5>
+                        <p class="lead text-secondary">Human</p>
+                    </div>
+                </div>
+            </article>
+        </template>
 
         <script src="app.js"></script>    
     </body>
