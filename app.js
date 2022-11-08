@@ -1,96 +1,137 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetchData();
-})
+const formulario = document.getElementById("formulario");
+const cardsEstudiantes = document.getElementById("cardsEstudiantes");
+const cardsProfesores = document.getElementById("cardsProfesores");
+const templateEstudiante = document.querySelector(
+  "#templateEstudiante"
+).content;
+const templateProfesor = document.getElementById("templateProfesor").content;
 
-const fetchData = async (url = "https://rickandmortyapi.com/api/character") => {
-    // console.log("obteniendo datos...");
-    try {
-        loadingData(true);
+const estudiantes = [];
+const profesores = [];
 
-        const res = await fetch(url);
-        const data = await res.json();
-
-        // console.log(data);
-        pintarCard(data);
-
-    } catch (error) {
-        console.log(error);     
-    } finally {
-        loadingData(false);
-    }
-};
-
-const pintarCard = (data) => {
-    const cards = document.getElementById("card-dinamicas");
-    cards.textContent = "";
-    const templateCard = document.getElementById("template-card").content;
-    const fragment = document.createDocumentFragment();
-    // console.log(data);
-    data.results.forEach(item => {
-        // console.log(item);
-        const clone = templateCard.cloneNode(true);
-        clone.querySelector("h5").textContent = item.name;
-        clone.querySelector("p").textContent = item.species;
-        clone.querySelector(".card-img-top").setAttribute("src", item.image);
-
-        // guardamos en el fragmentpara evitar el reflow
-        fragment.appendChild(clone);
-    });
-
-    cards.appendChild(fragment);
-
-    pintarPaginacion(data.info);
-};
-
-const pintarPaginacion = (data) => {
-    console.log(data);
-    const paginacion = document.getElementById("paginacion");
-    paginacion.textContent = "";
-    const templatePaginacion = document.getElementById(
-        "template-paginacion"
-    ).content;
-    const clone = templatePaginacion.cloneNode(true);
-
-    if(data.prev){
-        clone.querySelector(".btn-outline-secondary").disabled = false;
-
-    }else {    
-        clone.querySelector(".btn-outline-secondary").disabled = true;
-    }
-
-    if(data.next) {
-        clone.querySelector(".btn-outline-primary").disabled = false;
-    }else {
-        clone.querySelector(".btn-outline-primary").disabled = true;
-    }
-
-    paginacion.appendChild(clone);
-
-    paginacion.addEventListener("click", (e) => {
-        if(e.target.matches(".btn-outline-primary")){
-            console.log("click");
-            if (data.next) {
-                fetchData(data.next);
-            }
+document.addEventListener("click", (e) => {
+  // console.log(e.target.dataset.nombre);
+  if (e.target.dataset.nombre) {
+    // console.log(e.target.matches(".btn-success"));
+    if (e.target.matches(".btn-success")) {
+      estudiantes.map((item) => {
+        if (item.nombre === e.target.dataset.nombre) {
+          item.setEstado = true;
         }
-
-        if(e.target.matches(".btn-outline-secondary")){
-            console.log("click");
-            if (data.prev) {
-                fetchData(data.prev);                
-            }
-        }
-        
-    });
-
-};
-
-// pintar el loading
-const loadingData = estado => {
-    const loading = document.getElementById("loading");
-    if (estado){        
-        loading.classList.remove("d-none");
-    }else {
-        loading.classList.add("d-none");
+        console.log(item);
+        return item;
+      });
     }
-};
+    if (e.target.matches(".btn-danger")) {
+      estudiantes.map((item) => {
+        if (item.nombre === e.target.dataset.nombre) {
+          item.setEstado = false;
+        }
+        console.log(item);
+        return item;
+      });
+    }
+    Persona.pintarPersonaUI(estudiantes, "Estudiante");
+  }
+});
+
+class Persona {
+  constructor(nombre, edad) {
+    this.nombre = nombre;
+    this.edad = edad;
+  }
+
+  static pintarPersonaUI(personas, tipo) {
+    if (tipo === "Estudiante") {
+      cardsEstudiantes.textContent = "";
+      const fragment = document.createDocumentFragment();
+
+      personas.forEach((item) => {
+        fragment.appendChild(item.agregarNuevoEstudiante());
+      });
+
+      cardsEstudiantes.appendChild(fragment);
+    }
+
+    if (tipo === "Profesor") {
+      cardsProfesores.textContent = "";
+      const fragment = document.createDocumentFragment();
+
+      personas.forEach((item) => {
+        fragment.appendChild(item.agregarNuevoProfesor());
+      });
+
+      cardsProfesores.appendChild(fragment);
+    }
+  }
+}
+
+class Estudiente extends Persona {
+  #estado = false;
+  #estudiante = "Estudiante";
+
+  set setEstado(estado) {
+    this.#estado = estado;
+  }
+
+  get getEstudiante() {
+    return this.#estudiante;
+  }
+
+  agregarNuevoEstudiante() {
+    const clone = templateEstudiante.cloneNode(true);
+
+    clone.querySelector("h5 .text-primary").textContent = this.nombre;
+    clone.querySelector("h6").textContent = this.getEstudiante;
+    clone.querySelector(".lead").textContent = this.edad;
+
+    if (this.#estado) {
+      clone.getElementById(".badge").className = "badge bg-success";
+      clone.getElementById(".btn-success").disabled = true;
+      clone.getElementById(".btn-danger").disabled = false;
+    } else {
+      clone.querySelector(".badge").className = "badge bg-danger";
+      clone.querySelector(".btn-danger").disabled = true;
+      clone.querySelector(".btn-success").disabled = false;
+    }
+    clone.querySelector(".badge").textContent = this.#estado
+      ? "Aprobado"
+      : "Reprobado";
+
+    clone.querySelector(".btn-success").dataset.nombre = this.nombre;
+    clone.querySelector(".btn-danger").dataset.edad = this.edad;
+
+    return clone;
+  }
+}
+
+class Profesor extends Persona {
+  #profesor = "profesor";
+
+  agregarNuevoProfesor() {
+    const clone = templateProfesor.cloneNode(true);
+    clone.querySelector("h5").textContent = this.nombre;
+    clone.querySelector("h6").textContent = this.#profesor;
+    clone.querySelector(".lead").textContent = this.edad;
+    return clone;
+  }
+}
+
+formulario.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const datos = new FormData(formulario);
+  const [nombre, edad, opcion] = [...datos.values()];
+
+  if (opcion === "Estudiante") {
+    const estudiante = new Estudiente(nombre, edad);
+    estudiantes.push(estudiante);
+    Persona.pintarPersonaUI(estudiantes, opcion);
+  }
+
+  if (opcion === "Profesor") {
+    const profesor = new Profesor(nombre, edad);
+    profesores.push(profesor);
+    Persona.pintarPersonaUI(profesores, opcion);
+  }
+});
